@@ -7,8 +7,8 @@ jobs:
     steps:
       - name: My first action
         env:
-          xuhao: ${{secrets.xuhao}}
-          mima: ${{secrets.mima}}
+          xuhao: ${{secrets.XUHAO}}
+          mima: ${{secrets.MIMA}}
       - name: Check out this repo
         uses: actions/checkout@v2
       - name: Set up Python
