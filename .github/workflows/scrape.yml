@@ -3,20 +3,15 @@ name: scrape
 on:
   schedule:
     - cron: '0 23 * * *' # Clock in at 7:00 CST everyday.
+
   workflow_dispatch:
 
 jobs:
-  scrape:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: My first action
-        env:
-          xuhao: ${{secrets.XUHAO}}
-          mima: ${{secrets.MIMA}}
-          TZ: Asia/Shanghai
-
-      - name: Check out this repo
+      - name: Check out
         uses: actions/checkout@v2
 
       - name: Set up Python
@@ -37,5 +32,11 @@ jobs:
       - name: Install all necessary packages
         run: pip install webdriver-manager selenium
 
+      - name: My first action
+        env:
+          xuhao: ${{secrets.XUHAO}}
+          mima: ${{secrets.MIMA}}
+          TZ: Asia/Shanghai
+      
       - name: Run the scraping script
         run: python scraper.py
