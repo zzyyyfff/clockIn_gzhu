@@ -14,7 +14,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.utils import ChromeType
 
 
-def wd_login(XUHAO, MIMA):
+def wd_login(xuhao, mima):
     for i in range(20):
         try:
             chrome_service = Service(
@@ -45,8 +45,8 @@ def wd_login(XUHAO, MIMA):
             except:
                 pass
 
-            driver.find_element(By.ID, 'un').send_keys(XUHAO)
-            driver.find_element(By.ID, 'pd').send_keys(MIMA)
+            driver.find_element(By.ID, 'un').send_keys(xuhao)
+            driver.find_element(By.ID, 'pd').send_keys(mima)
             driver.find_element(By.ID, 'index_login_btn').click()
 
             try:
@@ -155,6 +155,6 @@ def wd_login(XUHAO, MIMA):
 
 
 if __name__ == "__main__":
-    XUHAO = str(os.environ['XUHAO'])
-    MIMA = str(os.environ['MIMA'])
-    wd_login(XUHAO, MIMA)
+    xuhao = str(os.environ['XUHAO'])
+    mima = str(os.environ['MIMA'])
+    wd_login(xuhao, mima)
