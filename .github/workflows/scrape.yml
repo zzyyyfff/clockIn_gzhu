@@ -32,11 +32,9 @@ jobs:
       - name: Install all necessary packages
         run: pip install webdriver-manager selenium
 
-      - name: My first action
+      - name: Run the scraping script
         env:
           xuhao: ${{secrets.XUHAO}}
           mima: ${{secrets.MIMA}}
           TZ: Asia/Shanghai
-      
-      - name: Run the scraping script
         run: python scraper.py
