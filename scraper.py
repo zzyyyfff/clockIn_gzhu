@@ -64,6 +64,8 @@ def wd_login(xuhao, mima):
                 windows = driver.window_handles
                 driver.switch_to.window(windows[0])
 
+            print('登录融合门户成功！')
+
             try:
                 WebDriverWait(driver, 30, 0.5).until(
                     ec.visibility_of_element_located(
@@ -81,6 +83,8 @@ def wd_login(xuhao, mima):
                 windows = driver.window_handles
                 driver.switch_to.window(windows[0])
 
+            print('登录服务大厅成功！')
+
             try:
                 WebDriverWait(driver, 30, 0.5).until(
                     ec.visibility_of_element_located(
@@ -93,6 +97,8 @@ def wd_login(xuhao, mima):
             startButton = driver.find_element(By.XPATH,
                                               "//a[contains(text(), '开始上报')]")
             ActionChains(driver).move_to_element(startButton).click().perform()
+
+            print('登录打卡开始界面成功！')
 
             try:
                 WebDriverWait(driver, 30, 0.5).until(
@@ -148,9 +154,13 @@ def wd_login(xuhao, mima):
             driver.find_element(By.XPATH,
                                 "//button[contains(text(), '确定')]").click()
 
+            print('打卡成功！')
+
             break
 
-        except:
+        except Exception as e:
+            print(e)
+            print(f"第{i}次运行失败！")
             time.sleep(10)
 
 
