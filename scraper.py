@@ -1,3 +1,4 @@
+import os
 import time
 
 from selenium import webdriver
@@ -154,4 +155,6 @@ def wd_login(xuhao, mima):
 
 
 if __name__ == "__main__":
+    xuhao = str(os.environ['XUHAO'])
+    mima = str(os.environ['MIMA'])
     wd_login(xuhao, mima)
