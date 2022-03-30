@@ -24,7 +24,6 @@ jobs:
         run: pip install webdriver-manager selenium
       - name: Run the scraping script
         env:
-          xuhao: ${{secrets.XUHAO}}
-          mima: ${{secrets.MIMA}}
-          TZ: Asia/Shanghai
+          xuhao: ${{ secrets.XUHAO }}
+          mima: ${{ secrets.MIMA }}
         run: python scraper.py
