@@ -6,25 +6,20 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
-from selenium.webdriver.edge.options import Options
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.relative_locator import locate_with
 from selenium.webdriver.support.wait import WebDriverWait
 from webdriver_manager.chrome import ChromeDriverManager
-from webdriver_manager.utils import ChromeType
 
 
 def wd_login(xuhao, mima):
     for i in range(20):
         try:
-            chrome_service = Service(
-                ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install())
+            options = Options()
+            options.add_argument("--headless")
 
-            chrome_options = Options()
-            chrome_options.add_argument("--headless")
-
-            driver = webdriver.Chrome(service=chrome_service,
-                                      options=chrome_options)
+            driver = webdriver.Chrome(Service(ChromeDriverManager().install()),
+                                      options)
 
             driver.get(
                 f'https://newcas.gzhu.edu.cn/cas/login?service=https%3A%2F%2Fnewmy.gzhu.edu.cn%2Fup%2Fview%3Fm%3Dup'

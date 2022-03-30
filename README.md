@@ -31,11 +31,16 @@
 
 首先把该项目Fork一份（在网页右上角，点Fork前记得顺便点个Star哦~），然后去到你fork下来的仓库里。
 
-接着，如图所示进行操作。
+接着，按照如图所示操作。
+
+虽然图中是STUID和STUPWD，但是名称应该设置为 XUHAO 和 MIMA
+它们的值分别对应你的学号和密码。
 
 ![Setsecrets](/assets/set_secrets.png)
 
 Action会在每日7点运行，如果需要手动运行Action，可根据下图进行操作
+
+图中第二步的workflow的名字是scrape（和图中GZHU Auto Clock In在同一位置）
 
 ![Runw workflow](/assets/run_workflow.png)
 
