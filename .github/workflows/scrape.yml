@@ -1,9 +1,10 @@
 name: scrape
 
 on:
-   schedule:
+  schedule:
     - cron: '0 23 * * *' # Clock in at 7:00 CST everyday.
   workflow_dispatch:
+
 jobs:
   scrape:
     runs-on: ubuntu-latest
