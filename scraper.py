@@ -155,6 +155,6 @@ def wd_login(xuhao, mima):
 
 
 if __name__ == "__main__":
-    xuhao = os.environ['XUHAO']
-    mima = os.environ['MIMA']
+    xuhao = str(os.environ['XUHAO'])
+    mima = str(os.environ['MIMA'])
     wd_login(xuhao, mima)
