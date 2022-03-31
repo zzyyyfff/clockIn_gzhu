@@ -16,7 +16,18 @@ def wd_login(xuhao, mima):
     for i in range(20):
         try:
             options = Options()
-            options.add_argument("--headless")
+            optionsList = [
+                "--headless", "--disable-gpu", "--window-size=1920,1200",
+                "--ignore-certificate-errors", "--disable-extensions",
+                "--no-sandbox", "--disable-dev-shm-usage"
+            ]
+
+            for option in optionsList:
+                options.add_argument(option)
+
+            options.page_load_strategy = 'eager'
+            options.add_experimental_option("excludeSwitches",
+                                            ['enable-logging'])
 
             driver = selenium.webdriver.Chrome(service=Service(
                 ChromeDriverManager().install()),

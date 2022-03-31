@@ -1,3 +1,4 @@
+from http import server
 import time
 import selenium.webdriver
 from selenium.webdriver.common.action_chains import ActionChains
@@ -6,6 +7,8 @@ from selenium.webdriver.edge.options import Options
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support.relative_locator import locate_with
+from webdriver_manager.microsoft import EdgeChromiumDriverManager
+from selenium.webdriver.edge.service import Service
 
 
 def wd_login(xuhao, mima):
@@ -27,7 +30,9 @@ def wd_login(xuhao, mima):
     options.page_load_strategy = 'eager'
     options.add_experimental_option("excludeSwitches", ['enable-logging'])
 
-    driver = selenium.webdriver.Edge(options=options)
+    driver = selenium.webdriver.Edge(service=Service(
+        EdgeChromiumDriverManager().install()),
+                                     options=options)
 
     driver.get(
         f'https://newcas.gzhu.edu.cn/cas/login?service=https%3A%2F%2Fnewmy.gzhu.edu.cn%2Fup%2Fview%3Fm%3Dup'
@@ -60,6 +65,8 @@ def wd_login(xuhao, mima):
         windows = driver.window_handles
         driver.switch_to.window(windows[0])
 
+    print('登录融合门户成功！')
+
     try:
         WebDriverWait(driver, 30, 0.5).until(
             ec.visibility_of_element_located(
@@ -76,6 +83,8 @@ def wd_login(xuhao, mima):
         windows = driver.window_handles
         driver.switch_to.window(windows[0])
 
+    print('登录服务大厅成功！')
+
     try:
         WebDriverWait(driver, 30, 0.5).until(
             ec.visibility_of_element_located(By.XPATH,
@@ -88,6 +97,8 @@ def wd_login(xuhao, mima):
     startButton = driver.find_element(By.XPATH,
                                       "//a[contains(text(), '开始上报')]")
     ActionChains(driver).move_to_element(startButton).click().perform()
+
+    print('登录打卡开始界面成功！')
 
     try:
         WebDriverWait(driver, 30, 0.5).until(
@@ -136,6 +147,8 @@ def wd_login(xuhao, mima):
     time.sleep(10)
 
     driver.find_element(By.XPATH, "//button[contains(text(), '确定')]").click()
+
+    print('打卡成功！')
 
 
 if __name__ == "__main__":
