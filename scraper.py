@@ -57,34 +57,9 @@ def wd_login(xuhao, mima):
             except:
                 pass
 
-            driver.find_element(By.XPATH, '//a[@title="健康打卡"]/img').click()
-
-            title = driver.title
-            if title == "融合门户":
-                driver.close()
-                windows = driver.window_handles
-                driver.switch_to.window(windows[0])
-
             print('登录融合门户成功！')
 
-            try:
-                WebDriverWait(driver, 30, 0.5).until(
-                    ec.visibility_of_element_located(
-                        (By.XPATH, "//img[@title='查看办事指南']")))
-            except:
-                pass
-
-            jumpButton = driver.find_element(By.XPATH,
-                                             "//img[@title='查看办事指南']")
-            ActionChains(driver).move_to_element(jumpButton).click().perform()
-
-            title = driver.title
-            if title == "服务大厅":
-                driver.close()
-                windows = driver.window_handles
-                driver.switch_to.window(windows[0])
-
-            print('登录服务大厅成功！')
+            driver.get('https://yqtb.gzhu.edu.cn/infoplus/form/XNYQSB/start')
 
             try:
                 WebDriverWait(driver, 30, 0.5).until(
@@ -162,6 +137,8 @@ def wd_login(xuhao, mima):
         except Exception as e:
             print(e)
             print(f"第{i+1}次运行失败！")
+
+            driver.quit()
 
             time.sleep(10)
 
