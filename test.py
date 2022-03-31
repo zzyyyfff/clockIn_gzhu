@@ -162,8 +162,6 @@ def wd_login(xuhao, mima):
 
             driver.quit()
 
-            time.sleep(10)
-
 
 if __name__ == "__main__":
     xuhao = input("学号：")
