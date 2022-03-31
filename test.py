@@ -125,16 +125,18 @@ def wd_login(xuhao, mima):
             try:
                 WebDriverWait(driver, 10, 0.5).until(
                     ec.visibility_of_element_located(
-                        By.XPATH, "//button[contains(text(), '确定')]"))
+                        By.XPATH, "//div[contains(text(), '打卡成功')]"))
             except:
                 pass
 
-            time.sleep(10)
+            alartElement = driver.find_element(
+                By.XPATH, "//div[contains(text(), '打卡成功')]")
+            if len(alartElement) != 0:
+                print('打卡成功！')
+            else:
+                print('提交表单遇到未知错误！')
 
-            driver.find_element(By.XPATH,
-                                "//button[contains(text(), '确定')]").click()
-
-            print('打卡成功！')
+            driver.quit()
 
             break
 
