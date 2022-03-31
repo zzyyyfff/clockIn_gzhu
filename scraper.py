@@ -1,7 +1,7 @@
 import os
 import time
 
-from selenium import webdriver
+import selenium.webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.action_chains import ActionChains
@@ -18,8 +18,9 @@ def wd_login(xuhao, mima):
             options = Options()
             options.add_argument("--headless")
 
-            driver = webdriver.Chrome(Service(ChromeDriverManager().install()),
-                                      options)
+            driver = selenium.webdriver.Chrome(service=Service(
+                ChromeDriverManager().install()),
+                                               options=options)
 
             driver.get(
                 f'https://newcas.gzhu.edu.cn/cas/login?service=https%3A%2F%2Fnewmy.gzhu.edu.cn%2Fup%2Fview%3Fm%3Dup'
@@ -157,4 +158,5 @@ def wd_login(xuhao, mima):
 if __name__ == "__main__":
     xuhao = str(os.environ['XUHAO'])
     mima = str(os.environ['MIMA'])
+
     wd_login(xuhao, mima)
