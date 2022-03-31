@@ -149,7 +149,8 @@ def wd_login(xuhao, mima):
 
         except Exception as e:
             print(e)
-            print(f"第{i+1}次运行失败！")
+            print(f"第{str(i+1)}次运行失败！")
+
             time.sleep(10)
 
 
