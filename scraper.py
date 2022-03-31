@@ -63,12 +63,13 @@ def wd_login(xuhao, mima):
 
             try:
                 WebDriverWait(driver, 30, 0.5).until(
-                    ec.visibility_of_element_located(
-                        By.XPATH, "//div[@style='display:none;']"))
+                    ec.element_attribute_to_include(
+                        (By.XPATH, "//div[@id='div_loader']"),
+                        "display: none;"))
             except:
                 pass
 
-            time.sleep(20)
+            time.sleep(5)
 
             startButton = driver.find_element(By.XPATH,
                                               "//a[contains(text(), '开始上报')]")
@@ -78,13 +79,11 @@ def wd_login(xuhao, mima):
 
             try:
                 WebDriverWait(driver, 30, 0.5).until(
-                    ec.visibility_of_element_located(
-                        By.XPATH,
-                        "//font[contains(text(), '正常')]/../../input[1]"))
+                    ec.element_attribute_to_include(
+                        (By.XPATH, "//div[@id='div_loader']"),
+                        "display: none;"))
             except:
                 pass
-
-            time.sleep(20)
 
             lastbutton = driver.find_element(
                 By.XPATH, "//div[@align='right']/input[@type='checkbox']")
@@ -95,14 +94,17 @@ def wd_login(xuhao, mima):
 
             try:
                 WebDriverWait(driver, 10, 0.5).until(
-                    ec.visibility_of_element_located(
-                        By.XPATH, "//button[contains(text(), '确定')]"))
+                    ec.element_to_be_clickable(
+                        By.XPATH,
+                        "//button[@class='dialog_button default fr']"))
             except:
                 pass
 
-            driver.find_element(By.XPATH,
-                                "//button[contains(text(), '确定')]").click()
+            driver.find_element(
+                By.XPATH,
+                "//button[@class='dialog_button default fr']").click()
 
+            # 等待页面滑动
             time.sleep(10)
 
             formErrorContentList = driver.find_elements(
@@ -118,21 +120,35 @@ def wd_login(xuhao, mima):
             driver.find_element(By.XPATH,
                                 "//nobr[contains(text(), '提交')]/..").click()
 
+            print('表单提交成功')
+
+            # 提交表单之后显示的打卡成功信息选择不了，不论是用XPATH还是js
+            # 所以用了time
+            time.sleep(20)
+
+            driver.refresh()
+
             try:
-                WebDriverWait(driver, 10, 0.5).until(
+                WebDriverWait(driver, 30, 0.5).until(
                     ec.visibility_of_element_located(
-                        By.XPATH, "//div[contains(text(), '打卡成功')]"))
+                        By.XPATH, "//h1[@align='left']/*/*/img"))
             except:
                 pass
 
-            alartElement = driver.find_element(
-                By.XPATH, "//div[contains(text(), '打卡成功')]")
-            if len(alartElement) != 0:
-                print('打卡成功！')
-            else:
-                print('提交表单遇到未知错误！')
+            time.sleep(20)
+
+            firstMessage = driver.execute_script(
+                "document.getElementById('title_content').children[0].textContent"
+            )
+            secondMessage = driver.execute_script(
+                "document.getElementsByClassName('no_action')[0].textContent")
+
+            print(firstMessage)
+            print(secondMessage)
 
             driver.quit()
+
+            print('打卡程序运行结束')
 
             break
 
