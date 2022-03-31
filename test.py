@@ -1,29 +1,29 @@
-from http import server
 import time
+
 import selenium.webdriver
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.edge.options import Options
-from selenium.webdriver.support import expected_conditions as ec
-from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.support.relative_locator import locate_with
-from webdriver_manager.microsoft import EdgeChromiumDriverManager
 from selenium.webdriver.edge.service import Service
+from selenium.webdriver.support import expected_conditions as ec
+from selenium.webdriver.support.relative_locator import locate_with
+from selenium.webdriver.support.wait import WebDriverWait
+from webdriver_manager.microsoft import EdgeChromiumDriverManager
 
 
 def wd_login(xuhao, mima):
     options = Options()
-    # optionsList = [
-    #     "--headless", "--disable-gpu", "--window-size=1920,1200",
-    #     "--ignore-certificate-errors", "--disable-extensions", "--no-sandbox",
-    #     "--disable-dev-shm-usage"
-    # ]
-
     optionsList = [
-        "--disable-gpu", "--window-size=1920,1200",
+        "--headless", "--disable-gpu", "--window-size=1920,1200",
         "--ignore-certificate-errors", "--disable-extensions", "--no-sandbox",
         "--disable-dev-shm-usage"
     ]
+
+    # optionsList = [
+    #     "--disable-gpu", "--window-size=1920,1200",
+    #     "--ignore-certificate-errors", "--disable-extensions", "--no-sandbox",
+    #     "--disable-dev-shm-usage"
+    # ]
     for option in optionsList:
         options.add_argument(option)
 
