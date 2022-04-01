@@ -112,13 +112,25 @@ def wd_login(xuhao, mima):
 
         if pageName in [0, 1, 2]:
             try:
-                WebDriverWait(driver, 30, 0.5).until(
-                    ec.visibility_of_element_located(
-                        (By.XPATH, '//a[@title="健康打卡"]/img')))
-            except:
-                pass
+                try:
+                    WebDriverWait(driver, 30, 0.5).until(
+                        ec.visibility_of_element_located(
+                            (By.XPATH, '//a[@title="健康打卡"]/img')))
+                except:
+                    pass
 
-            driver.get('https://yqtb.gzhu.edu.cn/infoplus/form/XNYQSB/start')
+                driver.get(
+                    'https://yqtb.gzhu.edu.cn/infoplus/form/XNYQSB/start')
+
+            except Exception as e:
+                print(e)
+                print(f"第{i+1}次运行失败！")
+
+                # i == 19代表最后一次循环，如果这次循环仍然异常，则
+                if i == 19:
+                    notification = 1
+
+                continue
 
         if pageName in [0, 1, 2, 3]:
             try:
