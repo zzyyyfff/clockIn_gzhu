@@ -1,7 +1,5 @@
 # 广州大学gzhu健康打卡脚本
 
----
-
 <!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
 
 <!-- code_chunk_output -->
@@ -18,8 +16,6 @@
 
 ## 感谢
 
----
-
 感谢situ2001让我发现了白嫖github action服务器的新思路
 [他的项目链接](https://github.com/situ2001/gzhu_no_clock_in)
 
@@ -28,8 +24,6 @@
 那就自己写一个打卡脚本吧，这种重复性的劳动就应该交给自动化来做！
 
 ## 使用方法
-
----
 
 设置两个repository secrets：XUHAO和MIMA
 它们的值分别对应你的学号和密码。
@@ -41,8 +35,6 @@
 如果github没有发邮件，就代表脚本运行成功
 
 ## 详细教程（前面的都没看懂也没关系，跟着下面操作就行）
-
----
 
 首先把该项目Fork一份（在网页右上角，点Fork前记得顺便点个Star哦~），然后点击如图所示的地方，也就是你的账号名。
 
@@ -77,8 +69,6 @@ Value是你自己的密码
 操作到这里，自动打卡就已经可以使用了
 
 ## FAQ
-
----
 
 ### Q: fork之后的仓库能更新吗？
 
