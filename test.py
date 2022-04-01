@@ -13,17 +13,17 @@ from webdriver_manager.microsoft import EdgeChromiumDriverManager
 
 def wd_login(xuhao, mima):
     options = Options()
-    # optionsList = [
-    #     "--headless", "--disable-gpu", "--window-size=1920,1200",
-    #     "--ignore-certificate-errors", "--disable-extensions",
-    #     "--no-sandbox", "--disable-dev-shm-usage"
-    # ]
-
     optionsList = [
-        "--disable-gpu", "--window-size=1920,1200",
+        "--headless", "--disable-gpu", "--window-size=1920,1200",
         "--ignore-certificate-errors", "--disable-extensions", "--no-sandbox",
         "--disable-dev-shm-usage"
     ]
+
+    # optionsList = [
+    #     "--disable-gpu", "--window-size=1920,1200",
+    #     "--ignore-certificate-errors", "--disable-extensions", "--no-sandbox",
+    #     "--disable-dev-shm-usage"
+    # ]
     for option in optionsList:
         options.add_argument(option)
 
@@ -203,23 +203,7 @@ def wd_login(xuhao, mima):
 
                 # 提交表单之后显示的打卡成功信息选择不了，不论是用XPATH还是js
                 # 所以用了time
-                time.sleep(20)
-
-                driver.refresh()
-
-                try:
-                    WebDriverWait(driver, 30, 0.5).until(
-                        ec.visibility_of_element_located(
-                            By.XPATH, "//h1[@align='left']/*/*/img"))
-                except:
-                    pass
-
-                time.sleep(20)
-
-                print(
-                    driver.execute_script(
-                        "document.getElementsByClassName('color_b3')[0].children[0].textContent"
-                    ))
+                time.sleep(30)
 
                 print('打卡程序运行结束')
 
