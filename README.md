@@ -1,5 +1,7 @@
 # 广州大学gzhu健康打卡脚本
 
+---
+
 <!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
 
 <!-- code_chunk_output -->
@@ -7,11 +9,16 @@
 - [广州大学gzhu健康打卡脚本](#广州大学gzhu健康打卡脚本)
   - [感谢](#感谢)
   - [使用方法](#使用方法)
-  - [详细教程(仅供参考，因为用的别人的图)](#详细教程仅供参考因为用的别人的图)
+  - [详细教程（前面的都没看懂也没关系，跟着下面操作就行）](#详细教程前面的都没看懂也没关系跟着下面操作就行)
+  - [FAQ](#faq)
+    - [Q: fork之后的仓库能更新吗？](#q-fork之后的仓库能更新吗)
+    - [Q: 如果脚本运行失败怎么办？](#q-如果脚本运行失败怎么办)
 
 <!-- /code_chunk_output -->
 
 ## 感谢
+
+---
 
 感谢situ2001让我发现了白嫖github action服务器的新思路
 [他的项目链接](https://github.com/situ2001/gzhu_no_clock_in)
@@ -22,26 +29,63 @@
 
 ## 使用方法
 
+---
+
 设置两个repository secrets：XUHAO和MIMA
 它们的值分别对应你的学号和密码。
 
 脚本会在每天早上7点自动运行。
 
-## 详细教程(仅供参考，因为用的别人的图)
+如果你的github账号绑定了邮箱的话，当脚本运行失败时，githun会发送一封运行失败的邮件给你
 
-首先把该项目Fork一份（在网页右上角，点Fork前记得顺便点个Star哦~），然后去到你fork下来的仓库里。
+如果github没有发邮件，就代表脚本运行成功
 
-接着，按照如图所示操作。
+## 详细教程（前面的都没看懂也没关系，跟着下面操作就行）
 
-虽然图中是STUID和STUPWD，但是名称应该设置为 XUHAO 和 MIMA
-它们的值分别对应你的学号和密码。
+---
 
-![Setsecrets](/assets/set_secrets.png)
+首先把该项目Fork一份（在网页右上角，点Fork前记得顺便点个Star哦~），然后点击如图所示的地方，也就是你的账号名。
 
-Action会在每日7点运行，如果需要手动运行Action，可根据下图进行操作
+![1](/assets/1.png)
 
-图中第二步的workflow的名字是scrape（和图中GZHU Auto Clock In在同一位置）
+然后就来到下面这个界面
 
-![Runw workflow](/assets/run_workflow.png)
+![2](/assets/2.png)
+
+请按图操作，先点Repositories，然后找到自己刚刚fork的项目，点击
+
+这样就进入到了你自己fork的项目，如图
+
+![3](/assets/3.png)
+
+按图中操作，先点Settings，然后点Secrets，之后再点击Secrets的下拉菜单中的Actions，进入Actions secrets界面，接着继续按图操作
+
+![4](/assets/4.png)
+
+圈起来的是需要创建的两个Secrets，点击New repository secret进入创建界面，如下图
+
+![5](/assets/5.png)
+
+要创建的第一个Secrets的Name为XUHAO，注意XUHAO要大写。
+Value是你自己的学号
+全部输入完成后点击图中圈起来的绿色按钮Add secrect来创建
+
+接下来是第二个要创建的Secrets，Name是MIMA，注意MIMA要大写。
+Value是你自己的密码
+全部输入完成后点击图中圈起来的绿色按钮Add secrect来创建
+
+操作到这里，自动打卡就已经可以使用了
+
+## FAQ
+
+---
+
+### Q: fork之后的仓库能更新吗？
 
 如果fork下来的仓库在未来需要更新，点击Fetch upstream并fetch and merge即可
+
+### Q: 如果脚本运行失败怎么办？
+
+1. 如果你是第一次运行脚本，请先检查学号密码是否输入错误
+2. 其它时候大多是因为打卡系统崩溃导致的打卡失败，这个我无能为力，请待打卡系统恢复后手动打卡
+3. 如果你想查看程序运行日志和情况，请点击自己项目里的Actions选项卡，这里有程序运行的情况，时间等信息。你还可以点击进入每一个流程以查看详细运行情况
