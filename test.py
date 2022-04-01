@@ -57,7 +57,7 @@ def wd_login(xuhao, mima):
                 pass
 
             title = driver.title
-            if title == 'Unified Identity Authentication' | title == '统一身份认证':
+            if title in ['Unified Identity Authentication', '统一身份认证']:
                 pageName = 1
             elif title == '融合门户':
                 pageName = 2
