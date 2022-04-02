@@ -50,13 +50,6 @@ def wd_login(xuhao, mima):
             if retries != 0:
                 driver.refresh()
 
-                try:
-                    WebDriverWait(driver, 10).until(
-                        ec.presence_of_all_elements_located(
-                            (By.XPATH, "//title")))
-                except:
-                    pass
-
                 title = driver.title
                 if title in ['Unified Identity Authentication', '统一身份认证']:
                     pageName = 1
@@ -88,13 +81,6 @@ def wd_login(xuhao, mima):
                     driver.find_element(By.ID, 'un').send_keys(xuhao)
                     driver.find_element(By.ID, 'pd').send_keys(mima)
                     driver.find_element(By.ID, 'index_login_btn').click()
-
-                    try:
-                        WebDriverWait(driver, 10).until(
-                            ec.presence_of_all_elements_located(
-                                (By.XPATH, "//title")))
-                    except:
-                        pass
 
                     title = driver.title
                     if title == '融合门户':
