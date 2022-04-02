@@ -74,13 +74,13 @@
 
 ---
 
-- 要创建的第一个Secrets的Name为XUHAO，注意XUHAO要大写
+- 要创建的第一个Secret的Name为XUHAO，注意XUHAO要大写
 - Value是你自己的学号
 - 全部输入完成后点击图中圈起来的绿色按钮Add secrect来创建
 
 ---
 
-- 接下来是第二个要创建的Secrets，Name是MIMA，注意MIMA要大写。
+- 接下来是第二个要创建的Secret，Name是MIMA，注意MIMA要大写。
 - Value是你自己的密码
 - 全部输入完成后点击图中圈起来的绿色按钮Add secrect来创建
 
