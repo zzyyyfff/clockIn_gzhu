@@ -15,16 +15,17 @@ from webdriver_manager.chrome import ChromeDriverManager
 def wd_login(xuhao, mima):
     options = Options()
     optionsList = [
-        "--headless", "--disable-gpu", "--window-size=1920,1200",
-        "--ignore-certificate-errors", "--disable-extensions", "--no-sandbox",
-        "--disable-dev-shm-usage"
+        "--headless", "--enable-javascript", "start-maximized",
+        "--disable-gpu", "--disable-extensions", "--no-sandbox",
+        "--disable-browser-side-navigation", "--disable-dev-shm-usage"
     ]
 
     for option in optionsList:
         options.add_argument(option)
 
     options.page_load_strategy = 'eager'
-    options.add_experimental_option("excludeSwitches", ['enable-logging'])
+    options.add_experimental_option(
+        "excludeSwitches", ["ignore-certificate-errors", "enable-automation"])
 
     driver = selenium.webdriver.Chrome(service=Service(
         ChromeDriverManager().install()),
