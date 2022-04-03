@@ -38,7 +38,7 @@ def wd_login(xuhao, mima):
     driver = launch_webdriver()
 
     # pageName用来表示当前页面标题
-    # 0表示初始页面，Unified Identity Authentication页面, 统一身份认证页面和其它页面
+    # 0表示初始页面，Unified Identity Authentication页面，统一身份认证页面和其它页面
     pageName = 0
 
     # notification表示是否需要邮件通知打卡失败
