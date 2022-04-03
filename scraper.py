@@ -82,9 +82,12 @@ def wd_login(xuhao, mima):
 
                 print('正在尝试登陆融合门户')
 
-                driver.find_element(By.ID, 'un').send_keys(xuhao)
-                driver.find_element(By.ID, 'pd').send_keys(mima)
-                driver.find_element(By.ID, 'index_login_btn').click()
+                driver.execute_script(
+                    f"document.getElementById('un').value='{xuhao}'")
+                driver.execute_script(
+                    f"document.getElementById('pd').value='{mima}'")
+                driver.execute_script(
+                    "document.getElementById('index_login_btn').click()")
 
                 title = driver.title
                 if title == '融合门户':
@@ -124,10 +127,8 @@ def wd_login(xuhao, mima):
 
                 print('正在转到填报健康信息 - 学生健康状况申报页面')
 
-                startButton = driver.find_element(
-                    By.XPATH, "//a[contains(text(), '开始上报')]")
-                ActionChains(driver).move_to_element(
-                    startButton).click().perform()
+                driver.execute_script(
+                    "document.getElementById('preview_start_button').click()")
 
             if pageName in [0, 1, 2, 3]:
                 try:
@@ -140,13 +141,15 @@ def wd_login(xuhao, mima):
 
                 print('开始填表')
 
-                lastbutton = driver.find_element(
-                    By.XPATH, "//div[@align='right']/input[@type='checkbox']")
-                ActionChains(driver).move_to_element(
-                    lastbutton).click().perform()
+                xpath = "//div[@align='right']/input[@type='checkbox']"
+                driver.execute_script(
+                    f"document.evaluate({xpath}, document).iterateNext().click();"
+                )
 
-                driver.find_element(
-                    By.XPATH, "//nobr[contains(text(), '提交')]/..").click()
+                xpath = "//nobr[contains(text(), '提交')]/.."
+                driver.execute_script(
+                    f"document.evaluate({xpath}, document).iterateNext().click();"
+                )
 
                 try:
                     WebDriverWait(driver, 10).until(
@@ -156,9 +159,12 @@ def wd_login(xuhao, mima):
                 except:
                     pass
 
-                driver.find_element(
-                    By.XPATH,
-                    "//button[@class='dialog_button default fr']").click()
+                alert = driver.switch_to.alert
+                alert.accept()
+
+                # driver.find_element(
+                #     By.XPATH,
+                #     "//button[@class='dialog_button default fr']").click()
 
                 # 等待页面滑动
                 time.sleep(10)
@@ -173,8 +179,10 @@ def wd_login(xuhao, mima):
                     ActionChains(driver).move_to_element(
                         button).click().perform()
 
-                driver.find_element(
-                    By.XPATH, "//nobr[contains(text(), '提交')]/..").click()
+                xpath = "//nobr[contains(text(), '提交')]/.."
+                driver.execute_script(
+                    f"document.evaluate({xpath}, document).iterateNext().click();"
+                )
 
                 print('表单提交成功')
 
