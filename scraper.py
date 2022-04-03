@@ -50,6 +50,8 @@ def wd_login(xuhao, mima):
             if retries != 0:
                 driver.refresh()
 
+                print('刷新页面')
+
                 title = driver.title
                 if title in ['Unified Identity Authentication', '统一身份认证']:
                     pageName = 1
@@ -182,7 +184,7 @@ def wd_login(xuhao, mima):
 
             except Exception as e:
                 print(e)
-                print(f"第{retries+1}次运行失败！")
+                print(f"第{retries+1}次运行失败！\n")
 
                 # retries == 19代表最后一次循环，如果这次循环仍然异常，则
                 if retries == 19:
@@ -194,12 +196,14 @@ def wd_login(xuhao, mima):
         # 此时必须重新创建webdriver
         except Exception as e:
             print(e)
-            print(f"第{retries+1}次运行失败！")
+            print(f"第{retries+1}次运行失败！\n")
 
             # retries == 19代表最后一次循环，如果这次循环仍然异常，则
             if retries == 19:
                 notification = 1
             else:
+                print("结束webdriver并重新创建")
+
                 driver.quit()
 
                 driver = launch_webdriver()
