@@ -88,10 +88,10 @@ def wd_login(xuhao, mima):
 
                 title = driver.title
                 if title == '融合门户':
-                    print('登录融合门户成功！')
+                    print('登录融合门户成功!')
                 # 如果不在融合门户，就只可能是在登陆页面
                 else:
-                    print('登录融合门户失败！')
+                    print('登录融合门户失败!')
                     print('请检查学号与密码是否输入正确')
 
                     notification = 1
