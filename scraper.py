@@ -38,7 +38,7 @@ def wd_login(xuhao, mima):
     driver = launch_webdriver()
 
     # pageName用来表示当前页面标题
-    # 0表示初始状态和其它
+    # 0表示初始页面，Unified Identity Authentication页面, 统一身份认证页面和其它页面
     pageName = 0
 
     # notification表示是否需要邮件通知打卡失败
@@ -53,20 +53,18 @@ def wd_login(xuhao, mima):
                 driver.refresh()
 
                 title = driver.title
-                if title in ['Unified Identity Authentication', '统一身份认证']:
+                if title == '融合门户':
                     pageName = 1
-                elif title == '融合门户':
-                    pageName = 2
                 elif title == '学生健康状况申报':
-                    pageName = 3
+                    pageName = 2
                 elif title in ['填报健康信息 - 学生健康状况申报', '表单填写与审批::加载中']:
-                    pageName = 4
+                    pageName = 3
                 else:
                     pageName = 0
 
                 print(f'当前页面标题为：{title}')
 
-            if pageName in [0, 1]:
+            if pageName == 0:
                 print('正在转到统一身份认证页面')
 
                 driver.get(
@@ -100,7 +98,7 @@ def wd_login(xuhao, mima):
 
                     break
 
-            if pageName in [0, 1, 2]:
+            if pageName in [0, 1]:
                 try:
                     WebDriverWait(driver, 30).until(
                         ec.visibility_of_element_located(
@@ -113,7 +111,7 @@ def wd_login(xuhao, mima):
                 driver.get(
                     'https://yqtb.gzhu.edu.cn/infoplus/form/XNYQSB/start')
 
-            if pageName in [0, 1, 2, 3]:
+            if pageName in [0, 1, 2]:
                 try:
                     WebDriverWait(driver, 30).until(
                         ec.element_attribute_to_include(
@@ -131,7 +129,7 @@ def wd_login(xuhao, mima):
                 ActionChains(driver).move_to_element(
                     startButton).click().perform()
 
-            if pageName in [0, 1, 2, 3, 4]:
+            if pageName in [0, 1, 2, 3]:
                 try:
                     WebDriverWait(driver, 30).until(
                         ec.element_attribute_to_include(
