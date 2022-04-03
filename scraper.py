@@ -48,9 +48,9 @@ def wd_login(xuhao, mima):
     for retries in range(20):
         try:
             if retries != 0:
-                driver.refresh()
-
                 print('刷新页面')
+
+                driver.refresh()
 
                 title = driver.title
                 if title in ['Unified Identity Authentication', '统一身份认证']:
