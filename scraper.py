@@ -72,7 +72,6 @@ def wd_login(xuhao, mima):
                 )
 
                 try:
-                    # 智能等待
                     WebDriverWait(driver, 30).until(
                         ec.visibility_of_element_located(
                             (By.XPATH,
@@ -88,18 +87,6 @@ def wd_login(xuhao, mima):
                     f"document.getElementById('pd').value='{mima}'")
                 driver.execute_script(
                     "document.getElementById('index_login_btn').click()")
-
-                title = driver.title
-                if title == '融合门户':
-                    print('登录融合门户成功!')
-                # 如果不在融合门户，就只可能是在登陆页面
-                else:
-                    print('登录融合门户失败!')
-                    print('请检查学号与密码是否输入正确')
-
-                    notification = 1
-
-                    break
 
             if pageName in [0, 1]:
                 try:
@@ -123,7 +110,12 @@ def wd_login(xuhao, mima):
                 except:
                     pass
 
-                time.sleep(5)
+                try:
+                    WebDriverWait(driver, 30).until(
+                        ec.element_to_be_clickable(By.ID,
+                                                   "preview_start_button"))
+                except:
+                    pass
 
                 print('正在转到填报健康信息 - 学生健康状况申报页面')
 
@@ -143,12 +135,12 @@ def wd_login(xuhao, mima):
 
                 xpath = "//div[@align='right']/input[@type='checkbox']"
                 driver.execute_script(
-                    f"document.evaluate({xpath}, document).iterateNext().click();"
+                    f'document.evaluate("{xpath}", document).iterateNext().click();'
                 )
 
                 xpath = "//nobr[contains(text(), '提交')]/.."
                 driver.execute_script(
-                    f"document.evaluate({xpath}, document).iterateNext().click();"
+                    f'document.evaluate("{xpath}", document).iterateNext().click();'
                 )
 
                 try:
@@ -159,12 +151,9 @@ def wd_login(xuhao, mima):
                 except:
                     pass
 
-                alert = driver.switch_to.alert
-                alert.accept()
-
-                # driver.find_element(
-                #     By.XPATH,
-                #     "//button[@class='dialog_button default fr']").click()
+                driver.execute_script(
+                    "document.getElementsByClassName('dialog_button default fr')[0].click()"
+                )
 
                 # 等待页面滑动
                 time.sleep(10)
@@ -179,20 +168,27 @@ def wd_login(xuhao, mima):
                     ActionChains(driver).move_to_element(
                         button).click().perform()
 
+                print('尝试提交表单')
+
                 xpath = "//nobr[contains(text(), '提交')]/.."
                 driver.execute_script(
-                    f"document.evaluate({xpath}, document).iterateNext().click();"
+                    f'document.evaluate("{xpath}", document).iterateNext().click();'
                 )
 
-                print('表单提交成功')
-
-                # 提交表单之后显示的打卡成功信息选择不了，不论是用XPATH还是js
-                # 所以用了time
                 time.sleep(30)
 
-                print('打卡程序运行结束')
+                message = driver.execute_script(
+                    "return document.getElementsByClassName('form_do_action_error')[0]['textContent']"
+                )
+                print(message)
 
-                break
+                if message == '打卡成功':
+                    print('打卡程序运行结束')
+
+                    break
+
+                else:
+                    print('重新进行打卡')
 
         except Exception as e:
             print(e)
@@ -201,8 +197,6 @@ def wd_login(xuhao, mima):
             # retries == 19代表最后一次循环，如果这次循环仍然异常，则
             if retries == 19:
                 notification = 1
-
-            continue
 
     driver.quit()
 
