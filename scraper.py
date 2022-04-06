@@ -2,11 +2,11 @@ import os
 import time
 
 import selenium.webdriver
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as ec
+from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.relative_locator import locate_with
 from selenium.webdriver.support.wait import WebDriverWait
 from webdriver_manager.chrome import ChromeDriverManager
@@ -37,6 +37,8 @@ def launch_webdriver():
 def wd_login(xuhao, mima):
     driver = launch_webdriver()
 
+    wdwait = WebDriverWait(driver, 30)
+
     # pageName用来表示当前页面标题
     # 0表示初始页面，Unified Identity Authentication页面，统一身份认证页面和其它页面
     pageName = 0
@@ -47,7 +49,7 @@ def wd_login(xuhao, mima):
 
     for retries in range(20):
         try:
-            if retries != 0:
+            if retries:
                 print('刷新页面')
 
                 driver.refresh()
@@ -72,11 +74,11 @@ def wd_login(xuhao, mima):
                 )
 
                 try:
-                    WebDriverWait(driver, 30).until(
-                        ec.visibility_of_element_located(
+                    wdwait.until(
+                        EC.visibility_of_element_located(
                             (By.XPATH,
                              "//div[@class='robot-mag-win small-big-small']")))
-                except:
+                except TimeoutException:
                     pass
 
                 print('正在尝试登陆融合门户')
@@ -90,10 +92,10 @@ def wd_login(xuhao, mima):
 
             if pageName in [0, 1]:
                 try:
-                    WebDriverWait(driver, 30).until(
-                        ec.visibility_of_element_located(
+                    wdwait.until(
+                        EC.visibility_of_element_located(
                             (By.XPATH, '//a[@title="健康打卡"]/img')))
-                except:
+                except TimeoutException:
                     pass
 
                 print('正在转到学生健康状况申报页面')
@@ -103,57 +105,42 @@ def wd_login(xuhao, mima):
 
             if pageName in [0, 1, 2]:
                 try:
-                    WebDriverWait(driver, 30).until(
-                        ec.element_attribute_to_include(
+                    wdwait.until(
+                        EC.element_attribute_to_include(
                             (By.XPATH, "//div[@id='div_loader']"),
                             "display: none;"))
-                except:
+                except TimeoutException:
                     pass
 
-                try:
-                    WebDriverWait(driver, 30).until(
-                        ec.element_to_be_clickable(By.ID,
-                                                   "preview_start_button"))
-                except:
-                    pass
+                wdwait.until(
+                    EC.element_to_be_clickable(
+                        (By.ID, "preview_start_button"))).click()
 
                 print('正在转到填报健康信息 - 学生健康状况申报页面')
 
-                driver.execute_script(
-                    "document.getElementById('preview_start_button').click()")
-
             if pageName in [0, 1, 2, 3]:
                 try:
-                    WebDriverWait(driver, 30).until(
-                        ec.element_attribute_to_include(
+                    wdwait.until(
+                        EC.element_attribute_to_include(
                             (By.XPATH, "//div[@id='div_loader']"),
                             "display: none;"))
-                except:
+                except TimeoutException:
                     pass
 
                 print('开始填表')
 
-                xpath = "//div[@align='right']/input[@type='checkbox']"
-                driver.execute_script(
-                    f'document.evaluate("{xpath}", document).iterateNext().click();'
-                )
+                driver.find_element(
+                    By.XPATH,
+                    "//div[@align='right']/input[@type='checkbox']").click()
 
-                xpath = "//nobr[contains(text(), '提交')]/.."
-                driver.execute_script(
-                    f'document.evaluate("{xpath}", document).iterateNext().click();'
-                )
+                driver.find_element(
+                    By.XPATH, "//nobr[contains(text(), '提交')]/..").click()
 
-                try:
-                    WebDriverWait(driver, 10).until(
-                        ec.element_to_be_clickable(
-                            By.XPATH,
-                            "//button[@class='dialog_button default fr']"))
-                except:
-                    pass
-
-                driver.execute_script(
-                    "document.getElementsByClassName('dialog_button default fr')[0].click()"
-                )
+                wdwait.until(
+                    EC.element_to_be_clickable(
+                        (By.XPATH,
+                         "//button[@class='dialog_button default fr']"
+                         ))).click()
 
                 # 等待页面滑动
                 time.sleep(10)
@@ -162,18 +149,14 @@ def wd_login(xuhao, mima):
                     By.XPATH, "//div[@class='line10']")
 
                 for formErrorContent in formErrorContentList:
-                    button = driver.find_elements(
+                    driver.find_elements(
                         locate_with(By.XPATH, "//input[@type='radio']").below(
-                            formErrorContent))[0]
-                    ActionChains(driver).move_to_element(
-                        button).click().perform()
+                            formErrorContent))[0].click()
 
                 print('尝试提交表单')
 
-                xpath = "//nobr[contains(text(), '提交')]/.."
-                driver.execute_script(
-                    f'document.evaluate("{xpath}", document).iterateNext().click();'
-                )
+                driver.find_element(
+                    By.XPATH, "//nobr[contains(text(), '提交')]/..").click()
 
                 time.sleep(30)
 
