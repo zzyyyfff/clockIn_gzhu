@@ -78,6 +78,7 @@ def wd_login(xuhao, mima):
                         EC.visibility_of_element_located(
                             (By.XPATH,
                              "//div[@class='robot-mag-win small-big-small']")))
+
                 except TimeoutException:
                     pass
 
@@ -95,6 +96,7 @@ def wd_login(xuhao, mima):
                     wdwait.until(
                         EC.visibility_of_element_located(
                             (By.XPATH, '//a[@title="健康打卡"]/img')))
+
                 except TimeoutException:
                     pass
 
@@ -109,6 +111,7 @@ def wd_login(xuhao, mima):
                         EC.element_attribute_to_include(
                             (By.XPATH, "//div[@id='div_loader']"),
                             "display: none;"))
+
                 except TimeoutException:
                     pass
 
@@ -124,6 +127,7 @@ def wd_login(xuhao, mima):
                         EC.element_attribute_to_include(
                             (By.XPATH, "//div[@id='div_loader']"),
                             "display: none;"))
+
                 except TimeoutException:
                     pass
 
