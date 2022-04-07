@@ -84,12 +84,12 @@ def wd_login(xuhao, mima):
 
                 print('正在尝试登陆融合门户')
 
-                driver.execute_script(
-                    f"document.getElementById('un').value='{xuhao}'")
-                driver.execute_script(
-                    f"document.getElementById('pd').value='{mima}'")
-                driver.execute_script(
-                    "document.getElementById('index_login_btn').click()")
+                for script in [
+                        f"document.getElementById('un').value='{xuhao}'",
+                        f"document.getElementById('pd').value='{mima}'",
+                        "document.getElementById('index_login_btn').click()"
+                ]:
+                    driver.execute_script(script)
 
             if pageName in [0, 1]:
                 try:
@@ -133,12 +133,11 @@ def wd_login(xuhao, mima):
 
                 print('开始填表')
 
-                driver.find_element(
-                    By.XPATH,
-                    "//div[@align='right']/input[@type='checkbox']").click()
-
-                driver.find_element(
-                    By.XPATH, "//nobr[contains(text(), '提交')]/..").click()
+                for xpath in [
+                        "//div[@align='right']/input[@type='checkbox']",
+                        "//nobr[contains(text(), '提交')]/.."
+                ]:
+                    driver.find_element(By.XPATH, xpath).click()
 
                 wdwait.until(
                     EC.element_to_be_clickable(
