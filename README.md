@@ -13,15 +13,6 @@
 
 <!-- /code_chunk_output -->
 
-> ## 感谢
->
->感谢situ2001让我发现了白嫖github action服务器的新思路
->[他的项目链接](https://github.com/situ2001/gzhu_no_clock_in)
->
->本来没打算自己写的，主要是因为我用他写的脚本打卡失败的机率太高了，高得离谱
->
->那就自己写一个打卡脚本吧，这种重复性的劳动就应该交给自动化来做！
-
 ## 综合简介
 
 1. 脚本的使用需要设置两个repository secrets：XUHAO和MIMA
