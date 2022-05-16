@@ -1,27 +1,12 @@
 # 广州大学gzhu健康打卡脚本
 
-<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
-
-<!-- code_chunk_output -->
-
-- [广州大学gzhu健康打卡脚本](#广州大学gzhu健康打卡脚本)
-  - [综合简介](#综合简介)
-  - [详细教程](#详细教程)
-  - [FAQ](#faq)
-    - [Q: fork之后的仓库能更新吗？](#q-fork之后的仓库能更新吗)
-    - [Q: 如果脚本运行失败怎么办？](#q-如果脚本运行失败怎么办)
-
-<!-- /code_chunk_output -->
-
-## 综合简介
+## 简介
 
 1. 脚本的使用需要设置两个repository secrets：XUHAO和MIMA
 它们的值分别对应你的学号和密码。
 2. 脚本会在每天早上7点自动运行。
 3. 如果你的github账号绑定了邮箱的话，当脚本运行失败时，githun会发送一封运行失败的邮件给你
 4. 如果github没有发邮件，就代表脚本运行成功
-
-前面的都没看懂也没关系，跟着下面操作就行
 
 ## 详细教程
 
