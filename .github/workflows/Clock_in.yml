@@ -25,7 +25,7 @@ jobs:
       - name: Install all necessary packages
         run: pip install webdriver-manager selenium
 
-      - name: Run the scraping script
+      - name: Run the script
         env:
           XUHAO: ${{ secrets.XUHAO }}
           MIMA: ${{ secrets.MIMA }}
