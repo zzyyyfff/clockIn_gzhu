@@ -47,7 +47,7 @@ def wd_login(xuhao, mima):
     # 0表示不需要，1表示需要
     notification = 0
 
-    for retries in range(20):
+    for retries in range(10):
         try:
             if retries:
                 print('刷新页面')
@@ -180,8 +180,8 @@ def wd_login(xuhao, mima):
             print(e)
             print(f"第{retries+1}次运行失败！\n")
 
-            # retries == 19代表最后一次循环，如果这次循环仍然异常，则
-            if retries == 19:
+            # retries == 9代表最后一次循环，如果这次循环仍然异常，则
+            if retries == 9:
                 notification = 1
 
     driver.quit()
