@@ -53,7 +53,7 @@ def wd_login(xuhao, mima):
             logging.info(f"第{retries+1}次运行")
 
             if retries:
-                logging.debug('刷新页面')
+                logging.info('刷新页面')
 
                 driver.refresh()
 
@@ -67,10 +67,10 @@ def wd_login(xuhao, mima):
                 else:
                     pageName = 0
 
-                logging.debug(f'当前页面标题为：{title}')
+                logging.info(f'当前页面标题为：{title}')
 
             if pageName == 0:
-                logging.debug('正在转到统一身份认证页面')
+                logging.info('正在转到统一身份认证页面')
 
                 driver.get(
                     f'https://newcas.gzhu.edu.cn/cas/login?service=https%3A%2F%2Fnewmy.gzhu.edu.cn%2Fup%2Fview%3Fm%3Dup'
@@ -85,7 +85,7 @@ def wd_login(xuhao, mima):
                 except TimeoutException:
                     pass
 
-                logging.debug('正在尝试登陆融合门户')
+                logging.info('正在尝试登陆融合门户')
 
                 for script in [
                         f"document.getElementById('un').value='{xuhao}'",
@@ -103,7 +103,7 @@ def wd_login(xuhao, mima):
                 except TimeoutException:
                     pass
 
-                logging.debug('正在转到学生健康状况申报页面')
+                logging.info('正在转到学生健康状况申报页面')
 
                 driver.get(
                     'https://yqtb.gzhu.edu.cn/infoplus/form/XNYQSB/start')
@@ -122,7 +122,7 @@ def wd_login(xuhao, mima):
                     EC.element_to_be_clickable(
                         (By.ID, "preview_start_button"))).click()
 
-                logging.debug('正在转到填报健康信息 - 学生健康状况申报页面')
+                logging.info('正在转到填报健康信息 - 学生健康状况申报页面')
 
             if pageName in [0, 1, 2, 3]:
                 try:
@@ -134,7 +134,7 @@ def wd_login(xuhao, mima):
                 except TimeoutException:
                     pass
 
-                logging.debug('开始填表')
+                logging.info('开始填表')
 
                 for xpath in [
                         "//div[@align='right']/input[@type='checkbox']",
@@ -159,7 +159,7 @@ def wd_login(xuhao, mima):
                         locate_with(By.XPATH, "//input[@type='radio']").below(
                             formErrorContent))[0].click()
 
-                logging.debug('尝试提交表单')
+                logging.info('尝试提交表单')
 
                 driver.find_element(
                     By.XPATH, "//nobr[contains(text(), '提交')]/..").click()
@@ -169,7 +169,7 @@ def wd_login(xuhao, mima):
                 message = driver.execute_script(
                     "return document.getElementsByClassName('form_do_action_error')[0]['textContent']"
                 )
-                logging.debug(message)
+                logging.info(message)
 
                 if message == '打卡成功':
                     logging.info("打卡成功")
@@ -178,7 +178,7 @@ def wd_login(xuhao, mima):
                     break
 
                 else:
-                    logging.debug('重新进行打卡')
+                    logging.info('重新进行打卡')
 
         except Exception as e:
             logging.error(e)
@@ -198,7 +198,7 @@ def wd_login(xuhao, mima):
 
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.DEBUG,
+    logging.basicConfig(level=logging.INFO,
                         format='%(asctime)s - %(levelname)s - %(message)s')
 
     logging.info("开始打卡")
