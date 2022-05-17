@@ -1,4 +1,4 @@
-name: clockIn
+name: Clock in
 
 on:
   schedule:
@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  clockIn:
+  Clock in:
     runs-on: ubuntu-latest
 
     steps:
