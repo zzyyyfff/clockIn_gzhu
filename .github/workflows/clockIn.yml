@@ -1,4 +1,4 @@
-name: clockIN
+name: clockIn
 on:
   schedule:
     - cron: '0 23 * * *' # Clock in at 7:00 CST everyday.
@@ -21,4 +21,4 @@ jobs:
         env:
           XUHAO: ${{ secrets.XUHAO }}
           MIMA: ${{ secrets.MIMA }}
-        run: python clockIN_gzhu.py
+        run: python clockIn_gzhu.py
