@@ -1,8 +1,9 @@
-import logging
 import os
 import time
+import traceback
 
 import selenium.webdriver
+from loguru import logger
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
@@ -37,7 +38,6 @@ def launch_webdriver():
 
 def wd_login(xuhao, mima):
     driver = launch_webdriver()
-
     wdwait = WebDriverWait(driver, 30)
 
     # pageName用来表示当前页面标题
@@ -50,11 +50,10 @@ def wd_login(xuhao, mima):
 
     for retries in range(10):
         try:
-            logging.info(f"第{retries+1}次运行")
+            logger.info(f"第{retries+1}次运行")
 
             if retries:
-                logging.info('刷新页面')
-
+                logger.info('刷新页面')
                 driver.refresh()
 
                 title = driver.title
@@ -67,11 +66,10 @@ def wd_login(xuhao, mima):
                 else:
                     pageName = 0
 
-                logging.info(f'当前页面标题为：{title}')
+                logger.info(f'当前页面标题为：{title}')
 
             if pageName == 0:
-                logging.info('正在转到统一身份认证页面')
-
+                logger.info('正在转到统一身份认证页面')
                 driver.get(
                     f'https://newcas.gzhu.edu.cn/cas/login?service=https%3A%2F%2Fnewmy.gzhu.edu.cn%2Fup%2Fview%3Fm%3Dup'
                 )
@@ -81,12 +79,10 @@ def wd_login(xuhao, mima):
                         EC.visibility_of_element_located(
                             (By.XPATH,
                              "//div[@class='robot-mag-win small-big-small']")))
-
                 except TimeoutException:
                     pass
 
-                logging.info('正在尝试登陆融合门户')
-
+                logger.info('正在尝试登陆融合门户')
                 for script in [
                         f"document.getElementById('un').value='{xuhao}'",
                         f"document.getElementById('pd').value='{mima}'",
@@ -99,12 +95,10 @@ def wd_login(xuhao, mima):
                     wdwait.until(
                         EC.visibility_of_element_located(
                             (By.XPATH, '//a[@title="健康打卡"]/img')))
-
                 except TimeoutException:
                     pass
 
-                logging.info('正在转到学生健康状况申报页面')
-
+                logger.info('正在转到学生健康状况申报页面')
                 driver.get(
                     'https://yqtb.gzhu.edu.cn/infoplus/form/XNYQSB/start')
 
@@ -114,7 +108,6 @@ def wd_login(xuhao, mima):
                         EC.element_attribute_to_include(
                             (By.XPATH, "//div[@id='div_loader']"),
                             "display: none;"))
-
                 except TimeoutException:
                     pass
 
@@ -122,7 +115,7 @@ def wd_login(xuhao, mima):
                     EC.element_to_be_clickable(
                         (By.ID, "preview_start_button"))).click()
 
-                logging.info('正在转到填报健康信息 - 学生健康状况申报页面')
+                logger.info('正在转到填报健康信息 - 学生健康状况申报页面')
 
             if pageName in [0, 1, 2, 3]:
                 try:
@@ -130,12 +123,10 @@ def wd_login(xuhao, mima):
                         EC.element_attribute_to_include(
                             (By.XPATH, "//div[@id='div_loader']"),
                             "display: none;"))
-
                 except TimeoutException:
                     pass
 
-                logging.info('开始填表')
-
+                logger.info('开始填表')
                 for xpath in [
                         "//div[@align='right']/input[@type='checkbox']",
                         "//nobr[contains(text(), '提交')]/.."
@@ -159,8 +150,7 @@ def wd_login(xuhao, mima):
                         locate_with(By.XPATH, "//input[@type='radio']").below(
                             formErrorContent))[0].click()
 
-                logging.info('尝试提交表单')
-
+                logger.info('尝试提交表单')
                 driver.find_element(
                     By.XPATH, "//nobr[contains(text(), '提交')]/..").click()
 
@@ -169,20 +159,16 @@ def wd_login(xuhao, mima):
                 message = driver.execute_script(
                     "return document.getElementsByClassName('form_do_action_error')[0]['textContent']"
                 )
-                logging.info(message)
+                logger.info(message)
 
                 if message == '打卡成功':
-                    logging.info("打卡成功")
-                    logging.info('打卡程序运行结束')
-
+                    logger.info("打卡成功")
                     break
-
                 else:
-                    logging.info('重新进行打卡')
-
-        except Exception as e:
-            logging.error(e)
-            logging.error(f"第{retries+1}次运行失败")
+                    logger.info('重新进行打卡')
+        except Exception:
+            logger.error(traceback.format_exc())
+            logger.error(f"第{retries+1}次运行失败")
 
             # retries == 9代表最后一次循环，如果这次循环仍然异常，则
             if retries == 9:
@@ -191,18 +177,12 @@ def wd_login(xuhao, mima):
     driver.quit()
 
     if notification == 1:
-        logging.critical('打卡失败，尝试抛出异常，以便github邮件通知打卡失败')
-
+        logger.critical('打卡失败，尝试抛出异常，以便github邮件通知打卡失败')
         a = '12'
         a.append(a)
 
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO,
-                        format='%(asctime)s - %(levelname)s - %(message)s')
-
-    logging.info("开始打卡")
-
     xuhao = str(os.environ['XUHAO'])
     mima = str(os.environ['MIMA'])
 

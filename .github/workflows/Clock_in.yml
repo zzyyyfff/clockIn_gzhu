@@ -12,18 +12,15 @@ jobs:
 
     steps:
       - name: Check out this repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
         with:
           python-version: '3.9'
 
-      - name: Installed package list
-        run: apt list --installed
-
-      - name: Install all necessary packages
-        run: pip install webdriver-manager selenium
+      - name: Installed packages 
+        run: pip3 install -r requirements.txt
 
       - name: Run the script
         env:
