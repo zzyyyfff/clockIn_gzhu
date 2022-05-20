@@ -53,18 +53,24 @@ def wd_login(xuhao, mima):
             logger.info(f"第{retries+1}次运行")
 
             if retries:
-                logger.info('刷新页面')
-                driver.refresh()
+                while True:
+                    logger.info('刷新页面')
+                    driver.refresh()
 
-                title = driver.title
-                if title == '融合门户':
-                    pageName = 1
-                elif title == '学生健康状况申报':
-                    pageName = 2
-                elif title in ['填报健康信息 - 学生健康状况申报', '表单填写与审批::加载中']:
-                    pageName = 3
-                else:
-                    pageName = 0
+                    title = driver.title
+                    if title == '融合门户':
+                        pageName = 1
+                    elif title == '学生健康状况申报':
+                        pageName = 2
+                    elif title in ['填报健康信息 - 学生健康状况申报', '表单填写与审批::加载中']:
+                        pageName = 3
+                    elif title == "":
+                        logger.info(f'当前页面标题为：{title}')
+                        continue
+                    else:
+                        pageName = 0
+
+                    break
 
                 logger.info(f'当前页面标题为：{title}')
 
