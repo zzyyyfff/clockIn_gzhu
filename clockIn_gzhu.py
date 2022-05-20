@@ -1,5 +1,4 @@
 import os
-import time
 import traceback
 
 import selenium.webdriver
@@ -51,6 +50,7 @@ def wd_login(xuhao, mima):
     for retries in range(10):
         try:
             logger.info(f"第{retries+1}次运行")
+            refresh_times = 0
 
             if retries:
                 while True:
@@ -66,7 +66,10 @@ def wd_login(xuhao, mima):
                         pageName = 3
                     elif title == "":
                         logger.info(f'当前页面标题为：{title}')
-                        continue
+
+                        refresh_times += 1
+                        if refresh_times < 4:
+                            continue
                     else:
                         pageName = 0
 
@@ -109,14 +112,6 @@ def wd_login(xuhao, mima):
                     'https://yqtb.gzhu.edu.cn/infoplus/form/XNYQSB/start')
 
             if pageName in [0, 1, 2]:
-                try:
-                    wdwait.until(
-                        EC.element_attribute_to_include(
-                            (By.XPATH, "//div[@id='div_loader']"),
-                            "display: none;"))
-                except TimeoutException:
-                    pass
-
                 wdwait.until(
                     EC.element_to_be_clickable(
                         (By.ID, "preview_start_button"))).click()
@@ -126,9 +121,9 @@ def wd_login(xuhao, mima):
             if pageName in [0, 1, 2, 3]:
                 try:
                     wdwait.until(
-                        EC.element_attribute_to_include(
-                            (By.XPATH, "//div[@id='div_loader']"),
-                            "display: none;"))
+                        EC.element_to_be_clickable(
+                            (By.XPATH,
+                             "//div[@align='right']/input[@type='checkbox']")))
                 except TimeoutException:
                     pass
 
@@ -145,22 +140,23 @@ def wd_login(xuhao, mima):
                          "//button[@class='dialog_button default fr']"
                          ))).click()
 
-                # 等待页面滑动
-                time.sleep(10)
-
                 formErrorContentList = driver.find_elements(
                     By.XPATH, "//div[@class='line10']")
 
                 for formErrorContent in formErrorContentList:
-                    driver.find_elements(
+                    button = driver.find_elements(
                         locate_with(By.XPATH, "//input[@type='radio']").below(
-                            formErrorContent))[0].click()
+                            formErrorContent))[0]
+                    driver.execute_script("$(arguments[0]).click();", button)
 
                 logger.info('尝试提交表单')
                 driver.find_element(
                     By.XPATH, "//nobr[contains(text(), '提交')]/..").click()
 
-                time.sleep(30)
+                wdwait.until(
+                    EC.element_to_be_clickable(
+                        (By.XPATH,
+                         "//button[@class='dialog_button default fr']")))
 
                 message = driver.execute_script(
                     "return document.getElementsByClassName('form_do_action_error')[0]['textContent']"
