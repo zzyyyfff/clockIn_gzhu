@@ -37,7 +37,7 @@ def launch_webdriver():
 
 def wd_login(xuhao, mima):
     driver = launch_webdriver()
-    wdwait = WebDriverWait(driver, 30)
+    wdwait = WebDriverWait(driver, 90)
 
     # pageName用来表示当前页面标题
     # 0表示初始页面，Unified Identity Authentication页面，统一身份认证页面和其它页面
