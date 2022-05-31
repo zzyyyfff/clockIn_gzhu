@@ -83,13 +83,10 @@ def wd_login(xuhao, mima):
                     f'https://newcas.gzhu.edu.cn/cas/login?service=https%3A%2F%2Fnewmy.gzhu.edu.cn%2Fup%2Fview%3Fm%3Dup'
                 )
 
-                try:
-                    wdwait.until(
-                        EC.visibility_of_element_located(
-                            (By.XPATH,
-                             "//div[@class='robot-mag-win small-big-small']")))
-                except TimeoutException:
-                    pass
+                wdwait.until(
+                    EC.visibility_of_element_located(
+                        (By.XPATH,
+                         "//div[@class='robot-mag-win small-big-small']")))
 
                 logger.info('正在尝试登陆融合门户')
                 for script in [
@@ -100,12 +97,9 @@ def wd_login(xuhao, mima):
                     driver.execute_script(script)
 
             if pageName in [0, 1]:
-                try:
-                    wdwait.until(
+                wdwait.until(
                         EC.visibility_of_element_located(
                             (By.XPATH, '//a[@title="健康打卡"]/img')))
-                except TimeoutException:
-                    pass
 
                 logger.info('正在转到学生健康状况申报页面')
                 driver.get(
@@ -119,13 +113,10 @@ def wd_login(xuhao, mima):
                 logger.info('正在转到填报健康信息 - 学生健康状况申报页面')
 
             if pageName in [0, 1, 2, 3]:
-                try:
-                    wdwait.until(
+                wdwait.until(
                         EC.element_to_be_clickable(
                             (By.XPATH,
                              "//div[@align='right']/input[@type='checkbox']")))
-                except TimeoutException:
-                    pass
 
                 logger.info('开始填表')
                 for xpath in [
