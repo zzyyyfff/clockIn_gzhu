@@ -3,7 +3,6 @@ import traceback
 
 import selenium.webdriver
 from loguru import logger
-from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
@@ -98,8 +97,8 @@ def wd_login(xuhao, mima):
 
             if pageName in [0, 1]:
                 wdwait.until(
-                        EC.visibility_of_element_located(
-                            (By.XPATH, '//a[@title="健康打卡"]/img')))
+                    EC.visibility_of_element_located(
+                        (By.XPATH, '//a[@title="健康打卡"]/img')))
 
                 logger.info('正在转到学生健康状况申报页面')
                 driver.get(
@@ -114,9 +113,9 @@ def wd_login(xuhao, mima):
 
             if pageName in [0, 1, 2, 3]:
                 wdwait.until(
-                        EC.element_to_be_clickable(
-                            (By.XPATH,
-                             "//div[@align='right']/input[@type='checkbox']")))
+                    EC.element_to_be_clickable(
+                        (By.XPATH,
+                         "//div[@align='right']/input[@type='checkbox']")))
 
                 logger.info('开始填表')
                 for xpath in [
