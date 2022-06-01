@@ -1,4 +1,5 @@
 import os
+import time
 import traceback
 
 import selenium.webdriver
@@ -128,14 +129,26 @@ def wd_login(xuhao, mima, location):
                 index = 0
                 while index < 3:
                     driver.find_element(By.XPATH, xpath_list[index]).click()
+
+                    wdwait.until(
+                        EC.visibility_of_element_located((
+                            By.XPATH,
+                            "//span[@class='select2-dropdown select2-dropdown--above']"
+                        )))
                     driver.find_element(By.CLASS_NAME,
                                         "select2-search__field").send_keys(
                                             location[index])
+
+                    wdwait.until(
+                        EC.invisibility_of_element_located(
+                            (By.XPATH,
+                             "//li[contains(text(), 'searching...')]")))
                     driver.find_element(
                         By.XPATH,
                         "//li[@class='select2-results__option select2-results__option--highlighted']/span"
                     ).click()
 
+                    time.sleep(0.5)
                     index += 1
 
                 driver.find_element(
