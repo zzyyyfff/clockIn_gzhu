@@ -26,4 +26,5 @@ jobs:
         env:
           XUHAO: ${{ secrets.XUHAO }}
           MIMA: ${{ secrets.MIMA }}
+          LOCATION: ${{ secrets.LOCATION }}
         run: python clockIn_gzhu.py
