@@ -143,6 +143,9 @@ def wd_login(xuhao, mima, location):
                         EC.invisibility_of_element_located(
                             (By.XPATH,
                              "//li[contains(text(), 'searching...')]")))
+
+                    time.sleep(0.5)
+
                     driver.find_element(
                         By.XPATH,
                         "//li[@class='select2-results__option select2-results__option--highlighted']/span"
