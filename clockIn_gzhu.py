@@ -191,12 +191,12 @@ def wd_login(xuhao, mima, location):
                 message = driver.execute_script(
                     "return document.getElementsByClassName('form_do_action_error')[0]['textContent']"
                 )
-                logger.info(message)
 
                 if message == '打卡成功':
                     logger.info("打卡成功")
                     break
                 else:
+                    logger.error(message)
                     logger.info('重新进行打卡')
         except Exception:
             logger.error(traceback.format_exc())
