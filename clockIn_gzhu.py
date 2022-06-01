@@ -34,7 +34,7 @@ def launch_webdriver():
     return driver
 
 
-def wd_login(xuhao, mima):
+def wd_login(xuhao, mima, location):
     driver = launch_webdriver()
     wdwait = WebDriverWait(driver, 30)
 
@@ -46,7 +46,7 @@ def wd_login(xuhao, mima):
     # 0表示不需要，1表示需要
     notification = 0
 
-    for retries in range(10):
+    for retries in range(5):
         try:
             logger.info(f"第{retries+1}次运行")
             refresh_times = 0
@@ -120,28 +120,27 @@ def wd_login(xuhao, mima):
                 logger.info('开始填表')
 
                 xpath_list = [
-                    "//span[@aria-labelledby='select2-V1_CTRL119-container'",
-                    "//span[@aria-labelledby='select2-V1_CTRL120-container'",
-                    "//span[@aria-labelledby='select2-V1_CTRL121-container'"
+                    "//span[@aria-labelledby='select2-V1_CTRL119-container']",
+                    "//span[@aria-labelledby='select2-V1_CTRL120-container']",
+                    "//span[@aria-labelledby='select2-V1_CTRL121-container']"
                 ]
-                location_list = ["广东省", "广州市", "番禺区"]
 
                 index = 0
                 while index < 3:
                     driver.find_element(By.XPATH, xpath_list[index]).click()
+                    driver.find_element(By.CLASS_NAME,
+                                        "select2-search__field").send_keys(
+                                            location[index])
                     driver.find_element(
-                        By.CLASS_NAME,
-                        "select2-search__field").send_keys(location_list[index])
-                    driver.find_element(
-                        By.CLASS_NAME,
-                        "select2-results__option select2-results__option--highlighted"
+                        By.XPATH,
+                        "//li[@class='select2-results__option select2-results__option--highlighted']/span"
                     ).click()
 
                     index += 1
 
                 driver.find_element(
                     By.XPATH,
-                    "//input[@name='fieldJBXXjgsjtdz']").send_keys("广州大学")
+                    "//input[@name='fieldJBXXjgsjtdz']").send_keys(location[3])
 
                 for xpath in [
                         "//div[@align='right']/input[@type='checkbox']",
@@ -187,8 +186,8 @@ def wd_login(xuhao, mima):
             logger.error(traceback.format_exc())
             logger.error(f"第{retries+1}次运行失败")
 
-            # retries == 9代表最后一次循环，如果这次循环仍然异常，则
-            if retries == 9:
+            # retries == 4代表最后一次循环，如果这次循环仍然异常，则
+            if retries == 4:
                 notification = 1
 
     driver.quit()
@@ -202,5 +201,7 @@ def wd_login(xuhao, mima):
 if __name__ == "__main__":
     xuhao = str(os.environ['XUHAO'])
     mima = str(os.environ['MIMA'])
+    location = str(os.environ['LOCATION'])
+    location = location.split(" ")
 
-    wd_login(xuhao, mima)
+    wd_login(xuhao, mima, location)
