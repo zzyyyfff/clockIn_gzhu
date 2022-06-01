@@ -118,6 +118,31 @@ def wd_login(xuhao, mima):
                          "//div[@align='right']/input[@type='checkbox']")))
 
                 logger.info('开始填表')
+
+                xpath_list = [
+                    "//span[@aria-labelledby='select2-V1_CTRL119-container'",
+                    "//span[@aria-labelledby='select2-V1_CTRL120-container'",
+                    "//span[@aria-labelledby='select2-V1_CTRL121-container'"
+                ]
+                location_list = ["广东省", "广州市", "番禺区"]
+
+                index = 0
+                while index < 3:
+                    driver.find_element(By.XPATH, xpath_list[index]).click()
+                    driver.find_element(
+                        By.CLASS_NAME,
+                        "select2-search__field").send_keys(location_list[index])
+                    driver.find_element(
+                        By.CLASS_NAME,
+                        "select2-results__option select2-results__option--highlighted"
+                    ).click()
+
+                    index += 1
+
+                driver.find_element(
+                    By.XPATH,
+                    "//input[@name='fieldJBXXjgsjtdz']").send_keys("广州大学")
+
                 for xpath in [
                         "//div[@align='right']/input[@type='checkbox']",
                         "//nobr[contains(text(), '提交')]/.."
