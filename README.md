@@ -3,7 +3,7 @@
 ## 简介
 
 1. 脚本使用Github action自动进行广州大学gzhu每日健康打卡
-2. 使用此脚本需要设置三个Repository secrets：XUHAO,MIMA和LOCATION它们的值分别对应你的学号，密码，目前所在地
+2. 使用此脚本需要设置两个Repository secrets：XUHAO和MIMA它们的值分别对应你的学号，密码
 3. 脚本会在每天早上7点自动运行
 4. 如果你的Github账号绑定了邮箱的话，当脚本运行失败时，Github会发送一封运行失败的邮件给你
 5. 如果Github没有发邮件，就代表脚本运行成功
@@ -58,13 +58,6 @@
 
 - 接下来是第二个要创建的Secret，Name是MIMA，注意MIMA要大写。
 - Value是你自己的密码
-- 全部输入完成后点击图中圈起来的绿色按钮Add secrect来创建
-
----
-
-- 然后是第三个要创建的Secret, Name是LOCATION，注意LOCATION要大写。
-- Value是目前所在地，格式是:省 市 区 详细地址
-- 用空格隔开，示例:广东省 广州市 番禺区 大学城外环西路230号广州大学
 - 全部输入完成后点击图中圈起来的绿色按钮Add secrect来创建
 
 继续操作

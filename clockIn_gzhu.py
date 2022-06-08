@@ -35,7 +35,7 @@ def launch_webdriver():
     return driver
 
 
-def wd_login(xuhao, mima, location):
+def wd_login(xuhao, mima):
     driver = launch_webdriver()
     wdwait = WebDriverWait(driver, 30)
 
@@ -120,44 +120,6 @@ def wd_login(xuhao, mima, location):
 
                 logger.info('开始填表')
 
-                xpath_list = [
-                    "//span[@aria-labelledby='select2-V1_CTRL119-container']",
-                    "//span[@aria-labelledby='select2-V1_CTRL120-container']",
-                    "//span[@aria-labelledby='select2-V1_CTRL121-container']"
-                ]
-
-                index = 0
-                while index < 3:
-                    driver.find_element(By.XPATH, xpath_list[index]).click()
-
-                    wdwait.until(
-                        EC.visibility_of_element_located((
-                            By.XPATH,
-                            "//span[@class='select2-dropdown select2-dropdown--above']"
-                        )))
-                    driver.find_element(By.CLASS_NAME,
-                                        "select2-search__field").send_keys(
-                                            location[index])
-
-                    wdwait.until(
-                        EC.invisibility_of_element_located(
-                            (By.XPATH,
-                             "//li[contains(text(), 'searching...')]")))
-
-                    time.sleep(0.5)
-
-                    driver.find_element(
-                        By.XPATH,
-                        "//li[@class='select2-results__option select2-results__option--highlighted']/span"
-                    ).click()
-
-                    time.sleep(0.5)
-                    index += 1
-
-                driver.find_element(
-                    By.XPATH,
-                    "//input[@name='fieldJBXXjgsjtdz']").send_keys(location[3])
-
                 for xpath in [
                         "//div[@align='right']/input[@type='checkbox']",
                         "//nobr[contains(text(), '提交')]/.."
@@ -217,7 +179,5 @@ def wd_login(xuhao, mima, location):
 if __name__ == "__main__":
     xuhao = str(os.environ['XUHAO'])
     mima = str(os.environ['MIMA'])
-    location = str(os.environ['LOCATION'])
-    location = location.split(" ")
 
-    wd_login(xuhao, mima, location)
+    wd_login(xuhao, mima)
