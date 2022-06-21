@@ -1,5 +1,13 @@
 # 广州大学gzhu健康打卡脚本
 
+## 免责申明
+
+本项目仅做免费的学术交流使用。
+
+## 更新日志
+
+增加新功能：使用pushplus 推送加 微信公众号推送打卡成功与否的消息
+
 ## 简介
 
 1. 脚本使用Github action自动进行广州大学gzhu每日健康打卡
@@ -83,7 +91,7 @@
 ### pushplus 推送加 微信公众号
 
 - 创建一个Secret，Name是PUSHPLUS，注意PUSHPLUS要大写。
-- Value是你的token
+- Value是pushplus 推送加 的token
 
 ## FAQ
 
