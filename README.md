@@ -11,7 +11,7 @@
 ## 简介
 
 1. 脚本使用Github action自动进行广州大学gzhu每日健康打卡
-2. 使用此脚本需要设置两个Repository secrets：XUHAO和MIMA它们的值分别对应你的学号，密码
+2. 使用此脚本需要设置两个Repository secret：XUHAO和MIMA它们的值分别对应你的学号，密码
 3. 脚本会在每天早上7点自动运行
 4. （可选功能）使用pushplus 推送加 微信公众号推送打卡成功与否的消息 [设置方法](#pushplus-推送加-微信公众号)
 
@@ -90,7 +90,7 @@
 
 ### pushplus 推送加 微信公众号
 
-- 创建一个Secret，Name是PUSHPLUS，注意PUSHPLUS要大写。
+- 创建一个Repository secret，Name是PUSHPLUS，注意PUSHPLUS要大写。
 - Value是pushplus 推送加 的token
 
 ## FAQ
