@@ -1,182 +1,202 @@
 import os
+import sys
 import traceback
 
+import requests
 import selenium.webdriver
 from loguru import logger
 from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.relative_locator import locate_with
 from selenium.webdriver.support.wait import WebDriverWait
-from webdriver_manager.chrome import ChromeDriverManager
 
 
-def launch_webdriver():
-    options = Options()
-    optionsList = [
-        "--headless", "--enable-javascript", "start-maximized",
-        "--disable-gpu", "--disable-extensions", "--no-sandbox",
-        "--disable-browser-side-navigation", "--disable-dev-shm-usage"
-    ]
+class clockIn():
 
-    for option in optionsList:
-        options.add_argument(option)
+    def __init__(self):
+        self.xuhao = str(os.environ['XUHAO'])
+        self.mima = str(os.environ['MIMA'])
+        self.pushplus = str(os.environ['PUSHPLUS'])
 
-    options.page_load_strategy = 'eager'
-    options.add_experimental_option(
-        "excludeSwitches", ["ignore-certificate-errors", "enable-automation"])
+        options = Options()
+        optionsList = [
+            "--headless", "--enable-javascript", "start-maximized",
+            "--disable-gpu", "--disable-extensions", "--no-sandbox",
+            "--disable-browser-side-navigation", "--disable-dev-shm-usage"
+        ]
 
-    driver = selenium.webdriver.Chrome(service=Service(
-        ChromeDriverManager().install()),
-                                       options=options)
+        for option in optionsList:
+            options.add_argument(option)
 
-    return driver
+        options.page_load_strategy = 'eager'
+        options.add_experimental_option(
+            "excludeSwitches",
+            ["ignore-certificate-errors", "enable-automation"])
 
+        self.driver = selenium.webdriver.Chrome(options=options)
+        self.wdwait = WebDriverWait(self.driver, 30)
 
-def wd_login(xuhao, mima):
-    driver = launch_webdriver()
-    wdwait = WebDriverWait(driver, 30)
+        # self.page用来表示当前页面
+        # 0表示初始页面，Unified Identity Authentication页面，统一身份认证页面和其它页面
+        self.page = 0
+        self.fail = False
 
-    # pageName用来表示当前页面标题
-    # 0表示初始页面，Unified Identity Authentication页面，统一身份认证页面和其它页面
-    pageName = 0
+    def __call__(self):
+        for retries in range(5):
+            try:
+                logger.info(f"第{retries+1}次运行")
+                if retries:
+                    self.refresh()
 
-    # notification表示是否需要邮件通知打卡失败
-    # 0表示不需要，1表示需要
-    notification = 0
+                if self.page == 0:
+                    self.step1()
 
-    for retries in range(5):
-        try:
-            logger.info(f"第{retries+1}次运行")
-            refresh_times = 0
+                if self.page in [0, 1]:
+                    self.step2()
 
-            if retries:
-                while True:
-                    logger.info('刷新页面')
-                    driver.refresh()
+                if self.page in [0, 1, 2]:
+                    self.step3()
 
-                    title = driver.title
-                    if title == '融合门户':
-                        pageName = 1
-                    elif title == '学生健康状况申报':
-                        pageName = 2
-                    elif title in ['填报健康信息 - 学生健康状况申报', '表单填写与审批::加载中']:
-                        pageName = 3
-                    elif title == "":
-                        logger.info(f'当前页面标题为：{title}')
-
-                        refresh_times += 1
-                        if refresh_times < 4:
-                            continue
-                    else:
-                        pageName = 0
-
+                if self.page in [0, 1, 2, 3]:
+                    self.step4()
                     break
+            except Exception:
+                logger.error(traceback.format_exc())
+                logger.error(f'第{retries+1}次运行失败，当前页面标题为：{self.driver.title}')
 
-                logger.info(f'当前页面标题为：{title}')
+                if retries == 4:
+                    self.fail = True
 
-            if pageName == 0:
-                logger.info('正在转到统一身份认证页面')
-                driver.get(
-                    f'https://newcas.gzhu.edu.cn/cas/login?service=https%3A%2F%2Fnewmy.gzhu.edu.cn%2Fup%2Fview%3Fm%3Dup'
-                )
+        self.driver.quit()
+        self.notify()
 
-                wdwait.until(
-                    EC.visibility_of_element_located(
-                        (By.XPATH,
-                         "//div[@class='robot-mag-win small-big-small']")))
+    def refresh(self):
+        refresh_times = 0
 
-                logger.info('正在尝试登陆融合门户')
-                for script in [
-                        f"document.getElementById('un').value='{xuhao}'",
-                        f"document.getElementById('pd').value='{mima}'",
-                        "document.getElementById('index_login_btn').click()"
-                ]:
-                    driver.execute_script(script)
+        while True:
+            logger.info('刷新页面')
+            self.driver.refresh()
 
-            if pageName in [0, 1]:
-                wdwait.until(
-                    EC.visibility_of_element_located(
-                        (By.XPATH, '//a[@title="健康打卡"]/img')))
+            title = self.driver.title
+            if title == '融合门户':
+                self.page = 1
+            elif title == '学生健康状况申报':
+                self.page = 2
+            elif title in ['填报健康信息 - 学生健康状况申报', '表单填写与审批::加载中']:
+                self.page = 3
+            elif title == "":
+                logger.info('当前页面标题为：')
 
-                logger.info('正在转到学生健康状况申报页面')
-                driver.get(
-                    'https://yqtb.gzhu.edu.cn/infoplus/form/XNYQSB/start')
+                refresh_times += 1
+                if refresh_times < 4:
+                    continue
+            else:
+                self.page = 0
 
-            if pageName in [0, 1, 2]:
-                wdwait.until(
-                    EC.element_to_be_clickable(
-                        (By.ID, "preview_start_button"))).click()
+            break
 
-                logger.info('正在转到填报健康信息 - 学生健康状况申报页面')
+        logger.info(f'当前页面标题为：{title}')
 
-            if pageName in [0, 1, 2, 3]:
-                wdwait.until(
-                    EC.element_to_be_clickable(
-                        (By.XPATH,
-                         "//div[@align='right']/input[@type='checkbox']")))
+    def step1(self):
+        logger.info('正在转到统一身份认证页面')
+        self.driver.get(
+            'https://newcas.gzhu.edu.cn/cas/login?service=https%3A%2F%2Fnewmy.gzhu.edu.cn%2Fup%2Fview%3Fm%3Dup'
+        )
 
-                logger.info('开始填表')
+        self.wdwait.until(
+            EC.visibility_of_element_located(
+                (By.XPATH, "//div[@class='robot-mag-win small-big-small']")))
 
-                for xpath in [
-                        "//div[@align='right']/input[@type='checkbox']",
-                        "//nobr[contains(text(), '提交')]/.."
-                ]:
-                    driver.find_element(By.XPATH, xpath).click()
+        logger.info('正在尝试登陆融合门户')
+        for script in [
+                f"document.getElementById('un').value='{self.xuhao}'",
+                f"document.getElementById('pd').value='{self.mima}'",
+                "document.getElementById('index_login_btn').click()"
+        ]:
+            self.driver.execute_script(script)
 
-                wdwait.until(
-                    EC.element_to_be_clickable(
-                        (By.XPATH,
-                         "//button[@class='dialog_button default fr']"
-                         ))).click()
+    def step2(self):
+        self.wdwait.until(
+            EC.visibility_of_element_located(
+                (By.XPATH, '//a[@title="健康打卡"]/img')))
 
-                formErrorContentList = driver.find_elements(
-                    By.XPATH, "//div[@class='line10']")
+        logger.info('正在转到学生健康状况申报页面')
+        self.driver.get('https://yqtb.gzhu.edu.cn/infoplus/form/XNYQSB/start')
 
-                for formErrorContent in formErrorContentList:
-                    button = driver.find_elements(
-                        locate_with(By.XPATH, "//input[@type='radio']").below(
-                            formErrorContent))[0]
-                    driver.execute_script("$(arguments[0]).click();", button)
+    def step3(self):
+        self.wdwait.until(
+            EC.element_to_be_clickable(
+                (By.ID, "preview_start_button"))).click()
 
-                logger.info('尝试提交表单')
-                driver.find_element(
-                    By.XPATH, "//nobr[contains(text(), '提交')]/..").click()
+        logger.info('正在转到填报健康信息 - 学生健康状况申报页面')
 
-                wdwait.until(
-                    EC.element_to_be_clickable(
-                        (By.XPATH,
-                         "//button[@class='dialog_button default fr']")))
+    def step4(self):
+        self.wdwait.until(
+            EC.element_to_be_clickable(
+                (By.XPATH, "//div[@align='right']/input[@type='checkbox']")))
 
-                message = driver.execute_script(
-                    "return document.getElementsByClassName('form_do_action_error')[0]['textContent']"
-                )
+        logger.info('开始填表')
 
-                if message == '打卡成功':
-                    logger.info("打卡成功")
-                    break
-                else:
-                    logger.error(message)
-                    logger.info('重新进行打卡')
-        except Exception:
-            logger.error(traceback.format_exc())
-            logger.error(f"第{retries+1}次运行失败")
+        for xpath in [
+                "//div[@align='right']/input[@type='checkbox']",
+                "//nobr[contains(text(), '提交')]/.."
+        ]:
+            self.driver.find_element(By.XPATH, xpath).click()
 
-            # retries == 4代表最后一次循环，如果这次循环仍然异常，则
-            if retries == 4:
-                notification = 1
+        self.wdwait.until(
+            EC.element_to_be_clickable(
+                (By.XPATH,
+                 "//button[@class='dialog_button default fr']"))).click()
 
-    driver.quit()
+        formErrorContentList = self.driver.find_elements(
+            By.XPATH, "//div[@class='line10']")
 
-    if notification == 1:
-        logger.critical('打卡失败，尝试抛出异常，以便github邮件通知打卡失败')
-        a = '12'
-        a.append(a)
+        for formErrorContent in formErrorContentList:
+            button = self.driver.find_elements(
+                locate_with(
+                    By.XPATH,
+                    "//input[@type='radio']").below(formErrorContent))[0]
+            self.driver.execute_script("$(arguments[0]).click();", button)
+
+        logger.info('尝试提交表单')
+        self.driver.find_element(By.XPATH,
+                                 "//nobr[contains(text(), '提交')]/..").click()
+
+        self.wdwait.until(
+            EC.element_to_be_clickable(
+                (By.XPATH, "//button[@class='dialog_button default fr']")))
+
+        message = self.driver.execute_script(
+            "return document.getElementsByClassName('form_do_action_error')[0]['textContent']"
+        )
+
+        if message == '打卡成功':
+            logger.info("打卡成功")
+        else:
+            logger.error(f"弹出框消息不正确，为:{message}")
+            self.fail = True
+
+    def notify(self):
+        if not self.pushplus:
+            if self.fail:
+                sys.exit("打卡失败")
+            else:
+                sys.exit()
+        else:
+            if self.fail:
+                title = content = "健康打卡失败"
+            else:
+                title = content = "健康打卡成功"
+
+            logger.info("推送打卡成功与否的消息")
+
+        if self.pushplus:
+            data = {"token": self.pushplus, "title": title, "content": content}
+            url = "http://www.pushplus.plus/send/"
+            logger.info(requests.post(url, data=data).text)
 
 
 if __name__ == "__main__":
-    xuhao = str(os.environ['XUHAO'])
-    mima = str(os.environ['MIMA'])
-
-    wd_login(xuhao, mima)
+    cl = clockIn()
+    cl()
